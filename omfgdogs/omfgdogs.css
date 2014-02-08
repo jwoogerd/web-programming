@@ -3,6 +3,8 @@ html, body {
     margin: 0px;
 }
 
+/* styles for windows > 992px */
+
 @media (min-width: 992px) {
     #omfgdogs {
         color: #000; /* Fallback for older browsers */
@@ -22,15 +24,13 @@ html, body {
         font-size: 2em;
     }
 
-    a {
+    a, a:visited, a:hover {
         color: white;
         text-decoration: none;
     }
-
-    a:visited {
-        color: white;
-    }
 }
+
+/* styles for windows < 992px */
 
 @media (max-width: 992px) {
     #omfgdogs {
