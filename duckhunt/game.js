@@ -7,9 +7,9 @@ window.onload = function() {
 };
 
 function init() {
-    var game_canvas = document.getElementById("game");
-    var game_context = game_canvas.getContext("2d");
-    var sprite = new Image();
+    var game_canvas = document.getElementById("game"),
+        game_context = game_canvas.getContext("2d"),
+        sprite = new Image();
     sprite.src = "assets/duckhunt.png";
 
     /* fill background colors */
