@@ -41,4 +41,4 @@ function init() {
         game_context.drawImage(sprite, 210, 190, 42, 42, 
                                        350, 200, 100, 100);
     };
-};
+}
