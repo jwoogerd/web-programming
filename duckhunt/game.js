@@ -19,14 +19,14 @@ function init() {
     game_context.fillRect(0, 0, 800, 500);
 
     sprite.onload = function () {
+        /* tree */
+        game_context.drawImage(sprite, 0, 270, 95, 180, 
+                                       20, 70, 260, 540);
         /* ground */
         game_context.drawImage(sprite, 0, 720, 900, 240, 
                                        0, 375, 900, 240);
         /* sniffing dog */
         game_context.drawImage(sprite, 0, 0, 60, 55, 
-                                       200, 450, 120, 115);
-        /* tree */
-        game_context.drawImage(sprite, 0, 0, 60, 55, 
-                                       200, 450, 120, 115);
+                                       200, 425, 150, 137);
     };
 };
