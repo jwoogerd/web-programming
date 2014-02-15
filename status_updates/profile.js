@@ -1,5 +1,5 @@
 /* 
- * profile.js - time-stamped status updates.
+ * profile.js - Add time-stamped status updates in profile.html.
  */
 
 function post_update() {
