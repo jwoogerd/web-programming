@@ -15,7 +15,7 @@ function post_update() {
 
     p.innerHTML = month + "/" + date + "/" + year + " " + 
                   hour + ":" + mins + " " + msg.value;
-    status.appendChild(p);
+    status.insertBefore(p, status.firstChild);
     msg.value = "";
 }
 
