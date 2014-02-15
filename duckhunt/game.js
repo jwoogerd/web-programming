@@ -28,5 +28,16 @@ function init() {
         /* sniffing dog */
         game_context.drawImage(sprite, 0, 0, 60, 55, 
                                        200, 425, 150, 137);
+        /* five birds */
+        game_context.drawImage(sprite, -1, 110, 40, 40, 
+                                       500, 80, 100, 100);
+        game_context.drawImage(sprite, 260, 110, 40, 40, 
+                                       5, 5, 100, 100);
+        game_context.drawImage(sprite, 250, 150, 40, 40, 
+                                       260, 0, 100, 100);
+        game_context.drawImage(sprite, 205, 150, 40, 40, 
+                                       700, 100, 100, 100);
+        game_context.drawImage(sprite, 210, 190, 42, 42, 
+                                       350, 200, 100, 100);
     };
 };
