@@ -7,7 +7,7 @@ function post_update() {
     var status = document.getElementById("status");
     var p = document.createElement("p");
     var time = new Date();
-    var month = time.getMonth().toString();
+    var month = (time.getMonth() + 1).toString();
     var date = time.getDate().toString();
     var year = time.getFullYear().toString();
     var hour = time.getHours().toString();
