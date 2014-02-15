@@ -18,6 +18,7 @@ function init() {
     game_context.fillStyle = "#87CEEB";
     game_context.fillRect(0, 0, 800, 500);
 
+    /* render sprite images */
     sprite.onload = function () {
         /* tree */
         game_context.drawImage(sprite, 0, 270, 95, 180, 
