@@ -10,7 +10,7 @@ function init() {
         sprite.src = "assets/duckhunt.png";
 
         /* fill background colors */
-        context.fillStyle = "#C96A1B";
+        context.fillStyle = "#CC6B00";
         context.fillRect(0, 500, 800, 100);
         context.fillStyle = "#87CEEB";
         context.fillRect(0, 0, 800, 500);
