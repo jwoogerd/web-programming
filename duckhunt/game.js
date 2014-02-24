@@ -8,6 +8,7 @@ function init() {
         var context = canvas.getContext("2d"),
             sprite = new Image();
         sprite.src = "assets/duckhunt.png";
+        context.imageSmoothingEnabled = false;
 
         /* fill background colors */
         context.fillStyle = "#CC6B00";
@@ -37,6 +38,6 @@ function init() {
                                       700, 100, 100, 100);
             context.drawImage(sprite, 210, 190, 42, 42, 
                                       350, 200, 100, 100);
-        }
-    };
+        };
+    }
 }
