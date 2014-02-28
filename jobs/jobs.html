@@ -4,6 +4,7 @@
 
 <head>
     <meta name="description" content="Comp 20 lab 6">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="style.css">
 <title>Friends of Ming Chow Jobs Listing</title>
 <script>
@@ -17,9 +18,9 @@ function parse() {
         for (var i = 0;  i < 3;  i++) {
             div.appendChild(document.createElement('p'));
         }
-        t[0].innerHTML = job['company'];
-        t[1].innerHTML = job['location'];
-        t[2].innerHTML = job['position'];
+        t[0].innerHTML = 'Company: ' + job['company'];
+        t[1].innerHTML = 'Location: ' + job['location'];
+        t[2].innerHTML = 'Position: ' + job['position'];
         list.appendChild(div);
     });
 }
