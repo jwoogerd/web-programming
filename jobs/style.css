@@ -1,8 +1,15 @@
+/* Basic styles for jobs.html */
+
 html, body {
     height: 100%;
     margin: 0px;
+    font-size: 18pt;
 }
 
-div {
-    border: solid;
+#list div {
+    border: solid 3px blue;
+    margin: 1em auto;
+    padding: 1em;
+    max-width: 400px;
+    text-align: center;
 }
