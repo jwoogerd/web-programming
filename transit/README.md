@@ -15,10 +15,7 @@ Not yet implemented:
 
 Other to do:
 
-* CSS/HTML validation
-* Correct polylines: Alewife and Davis are out of order and supsect some blue
-  line stations as well
 * Documentation
 * Gracefully handle 500 error
 
-So far I've spent about 5 hours on this project.
+So far I've spent about 6 hours on this project.
