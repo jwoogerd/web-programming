@@ -57,13 +57,21 @@ function renderMap() {
         title: "Here I am at: "
     });
 
+    setLine();
+
     /* Set info window contents and open */
     infoWindow = new google.maps.InfoWindow({ 'maxWidth' : '100px' });
     infoWindow.setContent(marker.title + marker.position);
     infoWindow.open(map, marker);
 
-    setLine();
     renderLine();
+
+    distances = red.concat(orange, blue).map(function (stop) {
+        return { distance : haversine(lat, lng, stop.Lat, stop.Long),
+                 name : stop.Name };
+    });
+    distances.sort(function (a, b) { return a.distance - b.distance; });
+    console.log(distances);
 }
 
 function setLine() {
@@ -81,7 +89,7 @@ function setLine() {
         marker_color = 'http://google.com/mapfiles/ms/micons/blue-dot.png';
     } 
     /* sort line from north to south */
-    line.sort(function (a, b) { return (a.Lat < b.Lat) ? 1 : (a.Lat > b.Lat) ? -1 : 0; });
+    line.sort(function (a, b) { return (b.Lat - a.Lat); });
     
     /* fixup Alewife and Davis order */
     if (line == red) {
@@ -129,6 +137,28 @@ function renderLine() {
                                           map : map });
 }
 
+
+/* 
+ * haversine - returns the haversine distance (in miles) between two points 
+ * given their latitude and longitude.
+ */
+function haversine(lat1, lng1, lat2, lng2) {
+    var R = 6371, /* cicumference of earth in km */
+        miles_per_km = 0.621371192,
+        dLat = (lat2-lat1).toRad(),
+        dLon = (lng2-lng1).toRad(),
+        a, c;
+
+    a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    return R * c * miles_per_km;
+}
+
+/* http://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript */
+Number.prototype.toRad = function() {
+   return this * Math.PI / 180;
+};
 
 /* hardcoded station location data */
 
