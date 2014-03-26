@@ -45,7 +45,7 @@ function getMyLocation() {
 }
 
 function renderMap() {
-    me = new google.maps.LatLng(myLat, myLng);
+    me = new google.maps.LatLng(lat, lng);
 
     // Update map and go there...
     map.panTo(me);
@@ -57,7 +57,7 @@ function renderMap() {
     });
     marker.setMap(map);
 
-    // Open info window on click of marker
+    /* // Open info window on click of marker
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent(marker.title);
         infowindow.open(map, marker);
@@ -70,5 +70,5 @@ function renderMap() {
         types: ['food']
     };
     service = new google.maps.places.PlacesService(map);
-    service.search(request, callback);
+    service.search(request, callback); */
 }
