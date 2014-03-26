@@ -6,7 +6,6 @@ var request = new XMLHttpRequest(),
     lat = 42.373076999999995,
     lng = -71.1027502,
     me = new google.maps.LatLng(lat, lng),
-    infoWindow = new google.maps.InfoWindow({ 'maxWidth' : '100px' }), 
     options,
     map,
     blue, orange, red;
@@ -31,7 +30,7 @@ function getMyLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
         lat = position.coords.latitude;
-		lng = position.coords.longitude;
+        lng = position.coords.longitude;
 		});
 	} else {
         alert("Geolocation is not supported by your web browser.  What a shame!");
@@ -39,23 +38,26 @@ function getMyLocation() {
 }
 
 function renderMap() {
+    var infoWindow,
+        marker; 
+
     options = { zoom : 13,
                 center : me,
                 mapTypeId : google.maps.MapTypeId.ROADMAP
               };
     map = new google.maps.Map(document.getElementById("trains"), options);
 
-    // Update map and go there...
+    /* Update map and go there... */
     map.panTo(me);
 
-    // Create a marker
     marker = new google.maps.Marker({
         position: me,
         map : map, 
         title: "Here I am at: "
     });
 
-    // Set info window contents and open
+    /* Set info window contents and open */
+    infoWindow = new google.maps.InfoWindow({ 'maxWidth' : '100px' });
     infoWindow.setContent(marker.title + marker.position);
     infoWindow.open(map, marker);
 
@@ -64,28 +66,51 @@ function renderMap() {
 
 function setStationMarkers () {
     var line,
-        marker_color;
+        marker_color,
+        line_color,
+        path = [];
 
     if (train_data.line == 'red') {
         line = red;
+        line_color = 'red';
         marker_color = 'http://google.com/mapfiles/ms/micons/red-dot.png';
     } else if (train_data.line == 'orange') {
         line = orange;
+        line_color = 'orange';
         marker_color = 'http://google.com/mapfiles/ms/micons/orange-dot.png';
     } else if (train_data.line == 'blue') {
-        marker_color = 'http://google.com/mapfiles/ms/micons/blue-dot.png';
         line = blue;
+        line_color = 'blue';
+        marker_color = 'http://google.com/mapfiles/ms/micons/blue-dot.png';
     }
+    /* sort line from north to south */
+    line.sort(function (a, b) { return (a.Lat > b.Lat) ? 1 : (a.Lat < b.Lat) ? -1 : 0; });
+    
+    /* add the markers */
     line.map(function (stop) {
-        var stopLocation = new google.maps.LatLng(stop.Lat, stop.Long);
+        var stopLocation = new google.maps.LatLng(stop.Lat, stop.Long),
+            infoWindow = new google.maps.InfoWindow({ 'maxWidth' : '100px' }),
+            marker = new google.maps.Marker({
+                position : stopLocation,
+                title : stop.Name,
+                map : map,
+                icon : marker_color
+            });
 
-        marker = new google.maps.Marker({
-            position : stopLocation,
-            title : stop.Name,
-            map : map,
-            icon : marker_color
-        });
+        /* add stop location to path for polyline drawing */
+        path.push(stopLocation);
+
+        /* display station name in info window */
+        google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.setContent(marker.title);
+            infoWindow.open(map, marker);
+		});
     });
+
+    /* add the polyline path connecting the stops */
+    path = new google.maps.Polyline({ path : path,
+                                      strokeColor : line_color,
+                                      map : map });
 }
 
 /* hardcoded station location data */
@@ -124,8 +149,8 @@ orange = [
     { "Name":"Tufts Medical", "Lat":42.349662, "Long":-71.063917 },
     { "Name":"Wellington", "Lat":42.40237, "Long":-71.077082 }];
 red = [
-    { "stop":"alewife", "lat":42.395428, "long":-71.142483 },
-    { "stop":"andrew", "lat":42.330154, "long":-71.057655 },
+    { "Name":"Alewife", "Lat":42.395428, "Long":-71.142483 },
+    { "Name":"Andrew", "Lat":42.330154, "Long":-71.057655 },
     { "Name":"Ashmont", "Lat":42.284652, "Long":-71.06448899999999 },
     { "Name":"Braintree", "Lat":42.2078543, "Long":-71.0011385 },
     { "Name":"Broadway", "Lat":42.342622, "Long":-71.056967 },
