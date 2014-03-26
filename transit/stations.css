@@ -1,0 +1,14 @@
+
+/* stations.css - styles for transit stations map */
+
+html, body {
+    height: 100%;
+    margin: 0px;
+    font-size: 18pt;
+}
+
+#trains {
+    margin: 0 auto;
+    height: 600px;
+    width: 900px;
+}
