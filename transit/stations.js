@@ -6,10 +6,11 @@ var request = new XMLHttpRequest(),
     lat = 42.373076999999995,
     lng = -71.1027502,
     me = new google.maps.LatLng(lat, lng),
+    infoWindow = new google.maps.InfoWindow(), 
     options,
     map;
 
-    function init() {
+function init() {
     request.open("GET", "http://mbtamap.herokuapp.com/mapper/rodeo.json", true);
     request.onreadystatechange = callback;
     request.send(null);
@@ -50,9 +51,11 @@ function renderMap() {
     // Create a marker
     marker = new google.maps.Marker({
         position: me,
-        title: "Here I Am!"
+        title: "Here I am at: "
     });
     marker.setMap(map);
+    infoWindow.setContent(marker.title + marker.position);
+    infoWindow.open(map, marker);
 
     /* // Open info window on click of marker
     google.maps.event.addListener(marker, 'click', function() {
