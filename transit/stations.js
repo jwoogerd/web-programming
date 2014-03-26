@@ -8,6 +8,7 @@ var request = new XMLHttpRequest(),
     me = new google.maps.LatLng(lat, lng),
     options,
     map,
+    line, line_color, marker_color,
     blue, orange, red;
 
 function init() {
@@ -61,15 +62,11 @@ function renderMap() {
     infoWindow.setContent(marker.title + marker.position);
     infoWindow.open(map, marker);
 
-    setStationMarkers();
+    setLine();
+    renderLine();
 }
 
-function setStationMarkers () {
-    var line,
-        marker_color,
-        line_color,
-        path = [];
-
+function setLine() {
     if (train_data.line == 'red') {
         line = red;
         line_color = 'red';
@@ -82,9 +79,28 @@ function setStationMarkers () {
         line = blue;
         line_color = 'blue';
         marker_color = 'http://google.com/mapfiles/ms/micons/blue-dot.png';
-    }
+    } 
     /* sort line from north to south */
-    line.sort(function (a, b) { return (a.Lat > b.Lat) ? 1 : (a.Lat < b.Lat) ? -1 : 0; });
+    line.sort(function (a, b) { return (a.Lat < b.Lat) ? 1 : (a.Lat > b.Lat) ? -1 : 0; });
+    
+    /* fixup Alewife and Davis order */
+    if (line == red) {
+        temp = line[0];
+        line[0] = line[1];
+        line[1] = temp;
+    }
+    /* fixup station order in downtown Boston */
+    if (line == blue) {
+        downtown = line.splice(-4);
+        line.push(downtown[1]);
+        line.push(downtown[3]);
+        line.push(downtown[2]);
+        line.push(downtown[0]);
+    }
+}
+
+function renderLine() {
+    var path = [];
     
     /* add the markers */
     line.map(function (stop) {
@@ -97,21 +113,22 @@ function setStationMarkers () {
                 icon : marker_color
             });
 
-        /* add stop location to path for polyline drawing */
-        path.push(stopLocation);
-
         /* display station name in info window */
         google.maps.event.addListener(marker, 'click', function() {
             infoWindow.setContent(marker.title);
             infoWindow.open(map, marker);
 		});
+
+        /* add stop location to path for polyline drawing */
+        path.push(stopLocation);
     });
 
     /* add the polyline path connecting the stops */
-    path = new google.maps.Polyline({ path : path,
-                                      strokeColor : line_color,
-                                      map : map });
+    polyline = new google.maps.Polyline({ path : path,
+                                          strokeColor : line_color,
+                                          map : map });
 }
+
 
 /* hardcoded station location data */
 
