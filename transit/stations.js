@@ -23,7 +23,8 @@ function init() {
 function callback() {
     if (request.readyState == 4 && request.status == 200) {
         train_data = JSON.parse(request.responseText);
-        document.getElementById("trains").innerHTML = train_data.line;
+        //document.getElementById("trains").innerHTML = train_data.line;
+        console.log(train_data.line);
     } else if (request.status == 500) {
         document.getElementById("trains").innerHTML = 'Fail...';
     }
@@ -34,14 +35,15 @@ function getMyLocation() {
         navigator.geolocation.getCurrentPosition(function (position) {
         lat = position.coords.latitude;
 		lng = position.coords.longitude;
-		//renderMap();
+        console.log(lat);
+        console.log(lng);
+		renderMap();
 		});
 	} else {
         alert("Geolocation is not supported by your web browser.  What a shame!");
 	}
 }
 
-/*
 function renderMap() {
     me = new google.maps.LatLng(myLat, myLng);
 
@@ -69,4 +71,4 @@ function renderMap() {
     };
     service = new google.maps.places.PlacesService(map);
     service.search(request, callback);
-} */
+}
