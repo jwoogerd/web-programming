@@ -3,8 +3,8 @@
 
 var request = new XMLHttpRequest(),
     train_data,
-    lat,
-    lng,
+    lat = 42.373076999999995,
+    lng = -71.1027502,
     me = new google.maps.LatLng(lat, lng),
     options = { zoom : 13,
                 center : me,
@@ -33,10 +33,9 @@ function callback() {
 function getMyLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-        lat = position.coords.latitude;
-		lng = position.coords.longitude;
+        //lat = position.coords.latitude;
+		//lng = position.coords.longitude;
         console.log(lat);
-        console.log(lng);
 		renderMap();
 		});
 	} else {
