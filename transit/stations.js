@@ -3,9 +3,9 @@
 
 var request = new XMLHttpRequest(),
     train_data,
-    lat = 42.373076999999995,
-    lng = -71.1027502,
-    me = new google.maps.LatLng(lat, lng),
+    lat = 0, 
+    lng = 0,
+    me,
     options,
     map,
     line, line_color, marker_color,
@@ -21,7 +21,6 @@ function callback() {
     if (request.readyState == 4 && request.status == 200) {
         train_data = JSON.parse(request.responseText);
         getMyLocation();
-        renderMap();
     } else if (request.status == 500) {
         document.getElementById("trains").innerHTML = 'Fail...';
     }
@@ -32,6 +31,7 @@ function getMyLocation() {
         navigator.geolocation.getCurrentPosition(function (position) {
         lat = position.coords.latitude;
         lng = position.coords.longitude;
+        renderMap();
 		});
 	} else {
         alert("Geolocation is not supported by your web browser.  What a shame!");
@@ -46,33 +46,24 @@ function renderMap() {
         ps = info_div.childNodes,
         marker;
         
+    me = new google.maps.LatLng(lat, lng);
     options = { zoom : 13,
                 center : me,
                 mapTypeId : google.maps.MapTypeId.ROADMAP
               };
     map = new google.maps.Map(document.getElementById("trains"), options);
 
-    /* Update map and go there... */
+    /* update map and go there... */
     map.panTo(me);
     
-    setLine();
-    renderLine();
-
-    /* find the closest station to my location */
-    all_stations = red.concat(orange, blue).map(function (stop) {
-        return { distance : haversine(lat, lng, stop.Lat, stop.Long),
-                 name : stop.Name };
-    });
-    all_stations.sort(function (a, b) { return a.distance - b.distance; });
-    closest_station = all_stations[0];
-
+    /* create marker and info window with my location & closest station */
     marker = new google.maps.Marker({
         position: me,
         map : map, 
         title: "Here I am at: "
     });
-
-    /* Set info window content */
+    /* set info window content and open */
+    closest_station = find_closest();
     info_div.setAttribute('class', 'info');
     for (var i = 0; i < 3; i++) {
         info_div.appendChild(document.createElement('p'));
@@ -81,10 +72,13 @@ function renderMap() {
     ps[1].innerHTML = 'Closest station: ' + closest_station.name;
     ps[2].innerHTML = 'Distance: ' + closest_station.distance + ' miles away';
 
-    /* Open info window */
     infoWindow = new google.maps.InfoWindow();
     infoWindow.setContent(info_div);
     infoWindow.open(map, marker);
+
+    /* find the correct train line and render to map */
+    setLine();
+    renderLine();
 }
 
 function setLine() {
@@ -150,6 +144,15 @@ function renderLine() {
                                           map : map });
 }
 
+/* find_closest - returns the closest station to my location */
+function find_closest() {
+    var all_stations = red.concat(orange, blue).map(function (stop) {
+        return { distance : haversine(lat, lng, stop.Lat, stop.Long),
+                 name : stop.Name };
+    });
+    all_stations.sort(function (a, b) { return a.distance - b.distance; });
+    return all_stations[0];
+}
 
 /* 
  * haversine - returns the haversine distance (in miles) between two points 
