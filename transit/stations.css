@@ -12,3 +12,12 @@ html, body {
     height: 100%;
     width: 100%;
 }
+
+.info {
+    padding: 2px;
+    width: 300px;
+}
+
+.info p {
+    margin: 0.5px;
+}

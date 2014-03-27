@@ -40,8 +40,12 @@ function getMyLocation() {
 
 function renderMap() {
     var infoWindow,
-        marker; 
-
+        all_stations = [],
+        closest_station,
+        info_div = document.createElement('div'),
+        ps = info_div.childNodes,
+        marker;
+        
     options = { zoom : 13,
                 center : me,
                 mapTypeId : google.maps.MapTypeId.ROADMAP
@@ -50,6 +54,17 @@ function renderMap() {
 
     /* Update map and go there... */
     map.panTo(me);
+    
+    setLine();
+    renderLine();
+
+    /* find the closest station to my location */
+    all_stations = red.concat(orange, blue).map(function (stop) {
+        return { distance : haversine(lat, lng, stop.Lat, stop.Long),
+                 name : stop.Name };
+    });
+    all_stations.sort(function (a, b) { return a.distance - b.distance; });
+    closest_station = all_stations[0];
 
     marker = new google.maps.Marker({
         position: me,
@@ -57,21 +72,19 @@ function renderMap() {
         title: "Here I am at: "
     });
 
-    setLine();
+    /* Set info window content */
+    info_div.setAttribute('class', 'info');
+    for (var i = 0; i < 3; i++) {
+        info_div.appendChild(document.createElement('p'));
+    }
+    ps[0].innerHTML = marker.title + marker.position;
+    ps[1].innerHTML = 'Closest station: ' + closest_station.name;
+    ps[2].innerHTML = 'Distance: ' + closest_station.distance + ' miles away';
 
-    /* Set info window contents and open */
-    infoWindow = new google.maps.InfoWindow({ 'maxWidth' : '100px' });
-    infoWindow.setContent(marker.title + marker.position);
+    /* Open info window */
+    infoWindow = new google.maps.InfoWindow();
+    infoWindow.setContent(info_div);
     infoWindow.open(map, marker);
-
-    renderLine();
-
-    distances = red.concat(orange, blue).map(function (stop) {
-        return { distance : haversine(lat, lng, stop.Lat, stop.Long),
-                 name : stop.Name };
-    });
-    distances.sort(function (a, b) { return a.distance - b.distance; });
-    console.log(distances);
 }
 
 function setLine() {
@@ -154,7 +167,6 @@ function haversine(lat1, lng1, lat2, lng2) {
     a = Math.sin(dLat/2) * Math.sin(dLat/2) +
             Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1_rad) * Math.cos(lat2_rad); 
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    console.log(R * c * miles_per_km, lat2, lng2);
     return R * c * miles_per_km;
 }
 
