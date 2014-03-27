@@ -147,11 +147,14 @@ function haversine(lat1, lng1, lat2, lng2) {
         miles_per_km = 0.621371192,
         dLat = (lat2-lat1).toRad(),
         dLon = (lng2-lng1).toRad(),
+        lat1_rad = lat1.toRad(),
+        lat2_rad = lat2.toRad(),
         a, c;
 
     a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1_rad) * Math.cos(lat2_rad); 
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    console.log(R * c * miles_per_km, lat2, lng2);
     return R * c * miles_per_km;
 }
 
