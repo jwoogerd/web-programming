@@ -40,7 +40,7 @@ function getMyLocation() {
 }
 
 function renderMap() {
-    var infoWindow,
+    var infoWindow = new google.maps.InfoWindow(),
         all_stations = [],
         closest_station,
         info_div = document.createElement('div'),
@@ -61,7 +61,7 @@ function renderMap() {
     marker = new google.maps.Marker({
         position: me,
         map : map, 
-        title: "Here I am at: "
+        title: 'My location'
     });
     /* set info window content and open */
     closest_station = findClosest();
@@ -69,13 +69,14 @@ function renderMap() {
     for (var i = 0; i < 3; i++) {
         info_div.appendChild(document.createElement('p'));
     }
-    ps[0].innerHTML = marker.title + marker.position;
+    ps[0].innerHTML = 'Here I am at: ' + marker.position;
     ps[1].innerHTML = 'Closest station: ' + closest_station.name;
     ps[2].innerHTML = 'Distance: ' + closest_station.distance + ' miles away';
-
-    infoWindow = new google.maps.InfoWindow();
+        
+    addInfoWindow(marker, infoWindow, info_div);
     infoWindow.setContent(info_div);
     infoWindow.open(map, marker);
+    windows.push(infoWindow);
 
     /* find the correct train line and render to map */
     setLine();
@@ -159,17 +160,11 @@ function renderLine() {
         });
 
         /* display station name in info window */
-        google.maps.event.addListener(marker, 'click', function() {
-            clearWindows();
-            infoWindow.setContent(info_div);
-            infoWindow.open(map, marker);
-            windows.push(infoWindow);
-		});
+        addInfoWindow(marker, infoWindow, info_div);
 
         /* add stop location to path for polyline drawing */
         path.push(stopLocation);
     });
-
 
     /* add the polyline path connecting the stops */
     polyline = new google.maps.Polyline({ path : path,
@@ -177,6 +172,15 @@ function renderLine() {
                                           map : map });
 }
 
+/* addInfoWindow - add a click event to a marker to display an info window */
+function addInfoWindow(marker, infoWindow, content) {
+    google.maps.event.addListener(marker, 'click', function() {
+        clearWindows();
+        infoWindow.setContent(content);
+        infoWindow.open(map, marker);
+        windows.push(infoWindow);
+    });
+}
 
 /* clearWindows - dimiss all infoWindows currently open */
 /* http://stackoverflow.com/questions/953394 */
