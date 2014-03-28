@@ -1,21 +1,16 @@
 ####Assignment 3 - Transit rodeo
 ___
 
-Correctly implemented (so far):
+To my knoweledge, everything is implemented correctly, including:
 
-* Render the map with my current location
-* Display an info window with my location and the closest station
-* Geolocation
-* Show appropriate train line stations with custom markers and polyline
+* Rendering the map centered on this current location
+* Displaying an info window with my current location, the closest station, and
+  distance
+* Showing the appropriate train line stations with custom markers and polyline
+* Displaying the predicted schedule of a station when the marker is clicked
 
-Not yet implemented:
+Future to do:
 
-* Display schedule of station when clicked
+* Gracefully handle 500 error.
 
-Other to do:
-
-* Documentation
-* Dismiss window when another station is clicked
-* Gracefully handle 500 error
-
-So far I've spent about 7 hours on this project.
+I've spent about 9 hours on this project.
