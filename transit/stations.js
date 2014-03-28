@@ -8,6 +8,7 @@ var request = new XMLHttpRequest(),
     me,
     options,
     map,
+    windows = [],
     line, line_color, marker_color,
     blue, orange, red;
 
@@ -63,7 +64,7 @@ function renderMap() {
         title: "Here I am at: "
     });
     /* set info window content and open */
-    closest_station = find_closest();
+    closest_station = findClosest();
     info_div.setAttribute('class', 'info');
     for (var i = 0; i < 3; i++) {
         info_div.appendChild(document.createElement('p'));
@@ -118,7 +119,7 @@ function renderLine() {
     var path = [];
     
     /* add the markers */
-    line.map(function (stop) {
+    line.map(function(stop) {
         var stopLocation = new google.maps.LatLng(stop.Lat, stop.Long),
             infoWindow = new google.maps.InfoWindow({ 'maxWidth' : '100px' }),
             marker = new google.maps.Marker({
@@ -126,17 +127,49 @@ function renderLine() {
                 title : stop.Name,
                 map : map,
                 icon : marker_color
-            });
+            }),
+            trips = [],
+            info_div = document.createElement('div');
+        
+        /* set marker title with station name */
+        info_div.setAttribute('class', 'info');
+        title = document.createElement('p');
+        title.setAttribute('class', 'title');
+        title.innerHTML = 'Station: ' + stop.Name;
+        info_div.appendChild(title);
+
+        /* find scheduled trips to for each station and sort by arrival time */
+        train_data.schedule.map(function(trip) {
+            for(var index = 0; index < trip.Predictions.length; ++index) {
+                if (trip.Predictions[index].Stop == stop.Name) {
+                    trips.push({ destination : trip.Destination,
+                                   prediction : trip.Predictions[index].Seconds });
+                }
+            }
+        });
+        trips.sort(function (a, b) { return a.prediction - b.prediction; });
+
+        /* add trips to station markers */
+        trips.map(function (trip) {
+            trip.prediction = convertToMins(trip.prediction);
+            p = document.createElement('p');
+            p.innerHTML = 'Destination: ' + trip.destination + 
+                          ' -- ' + trip.prediction;
+            info_div.appendChild(p);
+        });
 
         /* display station name in info window */
         google.maps.event.addListener(marker, 'click', function() {
-            infoWindow.setContent(marker.title);
+            clearWindows();
+            infoWindow.setContent(info_div);
             infoWindow.open(map, marker);
+            windows.push(infoWindow);
 		});
 
         /* add stop location to path for polyline drawing */
         path.push(stopLocation);
     });
+
 
     /* add the polyline path connecting the stops */
     polyline = new google.maps.Polyline({ path : path,
@@ -144,8 +177,23 @@ function renderLine() {
                                           map : map });
 }
 
-/* find_closest - returns the closest station to my location */
-function find_closest() {
+
+/* clearWindows - dimiss all infoWindows currently open */
+/* http://stackoverflow.com/questions/953394 */
+function clearWindows() {
+    windows.forEach(function(item) { item.close(); });
+    windows = [];
+}
+
+/* convertToMins - convert raw seconds to "xx mins xx seconds" string. */
+function convertToMins(time) {
+    var mins = Math.floor(time / 60),
+        seconds = time % 60;
+    return mins + ' mins ' + seconds + ' seconds';
+}
+
+/* findClosest - returns the closest station to my location */
+function findClosest() {
     var all_stations = red.concat(orange, blue).map(function (stop) {
         return { distance : haversine(lat, lng, stop.Lat, stop.Long),
                  name : stop.Name };
@@ -173,7 +221,7 @@ function haversine(lat1, lng1, lat2, lng2) {
     return R * c * miles_per_km;
 }
 
-/* http://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript */
+/* http://stackoverflow.com/questions/14560999 */
 Number.prototype.toRad = function() {
    return this * Math.PI / 180;
 };
