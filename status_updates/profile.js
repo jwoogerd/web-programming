@@ -16,7 +16,7 @@ function post_update() {
     if (mins < 10) mins = '0' + mins;
 
     txt = month + '/' + date + '/' + year + ' ' + 
-                  hour + ':' + mins + ' ' + msg.value;
+                  hour + ':' + mins + ' - ' + msg.value;
     status.value = txt;
     msg.value = '';
     store();
