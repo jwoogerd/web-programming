@@ -15,9 +15,17 @@ html, body {
 
 .info {
     padding: 2px;
-    width: 300px;
+    width: 100%; 
 }
 
 .info p {
-    margin: 0.5px;
+    margin: 1px;
+    font-size: 1.1em;
+}
+
+.info .title {
+    text-align: center;
+    padding: 7px;
+    margin: 7px;
+    border-bottom: 1px solid black;
 }
